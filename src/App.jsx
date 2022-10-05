@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import MovieList from './components/MovieList';
 import MovieListHeading from './components/MovieListHeading';
@@ -9,21 +8,23 @@ function App() {
   const [movies, setMovies] = useState([]);
   const [searchValue, setSearchValue] = useState('');
 
-  const getMovieRequest = async () => {
-    const url = "http://www.omdbapi.com/?s=avengers&apikey=9cb968b";
+  const getMovieRequest = async (searchValue) => {
+    const url = `http://www.omdbapi.com/?s=${searchValue}&apikey=9cb968b`;
     const response = await fetch(url);
     const responseJson = await response.json();
 
-    setMovies(responseJson.Search);
+    if (responseJson.Search) {
+      setMovies(responseJson.Search);
+    }
   };
 
   useEffect(() => {
-    getMovieRequest();
-  }, []);
+    getMovieRequest(searchValue);
+  }, [searchValue]);
 
   
   return (
-    <div className='container-fluid'>
+    <div className='movie-app container-fluid'>
       <div className='row d-flex align-items-center mt-4 mb-4'>
         <MovieListHeading heading='Movies'/>
         <SearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
